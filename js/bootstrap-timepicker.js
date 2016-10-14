@@ -28,6 +28,7 @@
     this.showInputs = options.showInputs;
     this.showMeridian = options.showMeridian;
     this.showSeconds = options.showSeconds;
+    this.autoclose = options.autoclose;
     this.clearBtn = options.clearBtn;
     this.template = options.template;
     this.appendWidgetTo = options.appendWidgetTo;
@@ -127,6 +128,9 @@
     clearTime: function() {
       this.clear();
       this.$element.change();
+      if (this.autoclose) {
+        this.hideWidget();
+      }
     },
 
     decrementHour: function() {
