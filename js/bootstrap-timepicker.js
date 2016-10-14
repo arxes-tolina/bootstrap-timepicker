@@ -15,6 +15,7 @@
   var Timepicker = function(element, options) {
     this.widget = '';
     this.$element = $(element);
+    this.i18n = options.i18n || { clear: 'Clear' }
     this.defaultTime = options.defaultTime;
     this.disableFocus = options.disableFocus;
     this.disableMousewheel = options.disableMousewheel;
@@ -27,6 +28,7 @@
     this.showInputs = options.showInputs;
     this.showMeridian = options.showMeridian;
     this.showSeconds = options.showSeconds;
+    this.clearBtn = options.clearBtn;
     this.template = options.template;
     this.appendWidgetTo = options.appendWidgetTo;
     this.showWidgetOnAddonClick = options.showWidgetOnAddonClick;
@@ -89,6 +91,12 @@
         this.$widget = false;
       }
 
+      if (this.clearBtn && this.$widget !== false) {
+        this.$widget.find('.clear').on({
+            'click': $.proxy(this.clearTime, this),
+        });
+      }
+
       if (this.showInputs && this.$widget !== false) {
         this.$widget.find('input').each(function() {
           $(this).on({
@@ -114,6 +122,11 @@
       this.meridian = '';
 
       this.$element.val('');
+    },
+
+    clearTime: function() {
+      this.clear();
+      this.$element.change();
     },
 
     decrementHour: function() {
@@ -283,6 +296,7 @@
       }
 
       templateContent = '<table>'+
+         '<tbody>'+
          '<tr>'+
            '<td><a href="#" data-action="incrementHour"><span class="glyphicon glyphicon-chevron-up"></span></a></td>'+
            '<td class="separator">&nbsp;</td>'+
@@ -322,6 +336,12 @@
             '<td><a href="#" data-action="toggleMeridian"><span class="glyphicon glyphicon-chevron-down"></span></a></td>'
            : '') +
          '</tr>'+
+         '</tbody>'+
+         (this.clearBtn ?
+         '<tfoot>'+
+           '<tr><th colspan="' + (3 + 2 * this.showSeconds + 2 * this.showMeridian) + '" class="clear" style="display: table-cell;">' + this.i18n.clear + '</th></tr>'+
+         '</tfoot>'
+         : '') +
        '</table>';
 
       switch(this.template) {
