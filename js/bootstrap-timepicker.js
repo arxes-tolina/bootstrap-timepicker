@@ -61,7 +61,7 @@
           'click.timepicker': $.proxy(this.showWidget, this)
         });
         this.$element.on({
-          'focus.timepicker': $.proxy(this.highlightUnit, this),
+          'focus.timepicker': $.proxy(this.deferHighlightUnit, this),
           'click.timepicker': $.proxy(this.highlightUnit, this),
           'keydown.timepicker': $.proxy(this.elementKeydown, this),
           'blur.timepicker': $.proxy(this.blurElement, this),
@@ -77,7 +77,7 @@
           });
         } else {
           this.$element.on({
-            'focus.timepicker': $.proxy(this.highlightUnit, this),
+            'focus.timepicker': $.proxy(this.deferHighlightUnit, this),
             'click.timepicker': $.proxy(this.highlightUnit, this),
             'keydown.timepicker': $.proxy(this.elementKeydown, this),
             'blur.timepicker': $.proxy(this.blurElement, this),
@@ -414,6 +414,13 @@
       this.isOpen = false;
       // show/hide approach taken by datepicker
       this.$widget.detach();
+    },
+
+    deferHighlightUnit: function() {
+        var self = this;
+        setTimeout(function () {
+            self.highlightUnit.call(self);
+        }, 1);
     },
 
     highlightUnit: function() {
